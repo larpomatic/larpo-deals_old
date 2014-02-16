@@ -92,10 +92,11 @@
             <section>
                 <h2>Modèle (<a href="http://grails.org/doc/2.2.4/guide/GORM.html#domainClasses"
                                target="_blank">Model</a>)</h2>
-
+                <h4>Représentation de la base de données dans le code</h4>
+                <p>En base de données  |  En Groovy</p>
                 <p>Une table <-> Une classe Groovy</p>
 
-                <p>Code en CamelCase <-> Base de données en snake_case</p>
+                <p>synthaxe en snake_case <-> code en CamelCase</p>
 
                 <p>Une colonne <-> Une variable de classe</p>
 
@@ -127,7 +128,7 @@
                 <h2>Contrôleur (<a href="http://grails.org/doc/2.2.4/guide/theWebLayer.html#controllers"
                                    target="_blank">Controller</a>)
                 </h2>
-
+                <h4>Gère les requêtes des utilisateurs</h4>
                 <p></p>
             </section>
             <section>
@@ -149,13 +150,16 @@
     }
                     </code>
                 </pre>
+                <p>Ici, si l'utilisateur accède à l'URL : <a href="monsite.com/deal/list">monsite.com/deal/list</a>, alors il va déclancher la fonction list().
+                Cette fonction renvoie la liste des deals dans la variable deals pour qu'elle puisse être affiché dans la vue.
+                </p>
             </section>
         </section>
 
         <section>
             <section>
                 <h2>Vue (<a href="http://grails.org/doc/2.2.4/guide/theWebLayer.html#gsp" target="_blank">View</a>)</h2>
-
+                <h4>Génération de la page HTML renvoyée à l'utilisateur</h4>
                 <p></p>
             </section>
             <section>
