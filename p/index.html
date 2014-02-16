@@ -93,19 +93,27 @@
                 <h2>Modèle (<a href="http://grails.org/doc/2.2.4/guide/GORM.html#domainClasses"
                                target="_blank">Model</a>)</h2>
                 <h4>Représentation de la base de données dans le code</h4>
-                <p>En base de données  |  En Groovy</p>
-                <p>Une table <-> Une classe Groovy</p>
-
-                <p>synthaxe en snake_case <-> code en CamelCase</p>
-
-                <p>Une colonne <-> Une variable de classe</p>
-
-                <p>Clés étrangères <-> Mots clés</p>
+				<table>
+				<tr>
+                <td>En base de données</td><td>   | </td><td>En Groovy</td>
+				</tr>
+				<tr><td><br/></td><td><br/></td></tr>
+				<tr>
+                <td>Une table</td><td><=></td><td>Une classe Groovy</td>
+				</tr>
+				<tr>
+                <td>synthaxe en snake_case</td><td><=></td><td>code en CamelCase</td>
+				<tr>
+				<td>Une colonne</td><td><=></td><td>Une variable de classe</td>
+				<tr>
+                <td>Clés étrangères</td><td><=></td><td>Mots clés<br/>
                 <ul>
                     <li>hasMany</li>
                     <li>hasOne</li>
                     <li>belongsTo</li>
                 </ul>
+				</td></tr>
+				</table>
 
             </section>
             <section>
@@ -151,7 +159,7 @@
                     </code>
                 </pre>
                 <p>Ici, si l'utilisateur accède à l'URL : <a href="monsite.com/deal/list">monsite.com/deal/list</a>, alors il va déclencher la fonction list() du contrôlleur DealController.
-                Cette fonction renvoie la liste des deals dans la variable deals pour qu'elle puisse être affiché dans la vue.
+                Cette fonction renvoie la liste des deals dans la variable deals pour qu'elle puisse être affichée dans la vue.
                 </p>
             </section>
         </section>
@@ -272,9 +280,7 @@
         
         <section>
             <h2>Résumé des intéractions</h2>
-            <object type="image/svg+xml" data="fonctionnement.svg">
-                <p>Votre navigateur ne supporte pas le SVG.</p>
-            </object>
+<img src="img/fonctionnement.jpg" style="padding: 20px"/>
         </section>
 
         <section>
