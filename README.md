@@ -1,6 +1,6 @@
-Presentation Grails
+Présentation Grails
 ===================
 
-Presentation Grails proposee aux etudiants d'SIGL dans le cadre du PRC GN.
+Présentation Grails proposée aux étudiants d'SIGL dans le cadre du PRC GN.
 
-Initialise en 2014.
+Initialisé en 2014.
