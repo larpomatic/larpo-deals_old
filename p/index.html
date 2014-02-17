@@ -93,28 +93,10 @@
                 <h2>Modèle (<a href="http://grails.org/doc/2.2.4/guide/GORM.html#domainClasses"
                                target="_blank">Model</a>)</h2>
                 <h4>Représentation de la base de données dans le code</h4>
-				<table>
-				<tr>
-                <td>En base de données</td><td>   | </td><td>En Groovy</td>
-				</tr>
-				<tr><td><br/></td><td><br/></td></tr>
-				<tr>
-                <td>Une table</td><td><=></td><td>Une classe Groovy</td>
-				</tr>
-				<tr>
-                <td>synthaxe en snake_case</td><td><=></td><td>code en CamelCase</td>
-				<tr>
-				<td>Une colonne</td><td><=></td><td>Une variable de classe</td>
-				<tr>
-                <td>Clés étrangères</td><td><=></td><td>Mots clés<br/>
-                <ul>
-                    <li>hasMany</li>
-                    <li>hasOne</li>
-                    <li>belongsTo</li>
-                </ul>
-				</td></tr>
-				</table>
-
+                <p>Une table&nbsp;&nbsp;<=>&nbsp;&nbsp;Une classe Groovy</p>
+                <p>Syntaxe en snake_case&nbsp;&nbsp;<=>&nbsp;&nbsp;Code en CamelCase</p>
+                <p>Une colonne&nbsp;&nbsp;<=>&nbsp;&nbsp;Une variable de classe</p>
+                <p>Clés étrangères&nbsp;&nbsp;<=>&nbsp;&nbsp;Mots clés (hasMany, hasOne, belongsTo)</p>
             </section>
             <section>
                 <h2>Exemple de modèle</h2>
@@ -158,9 +140,8 @@
     }
                     </code>
                 </pre>
-                <p>Ici, si l'utilisateur accède à l'URL : <a href="monsite.com/deal/list">monsite.com/deal/list</a>, alors il va déclencher la fonction list() du contrôlleur DealController.
-                Cette fonction renvoie la liste des deals dans la variable deals pour qu'elle puisse être affichée dans la vue.
-                </p>
+                <p>L'URL <a href="#">larpodeals.com/deal/list</a>, pointe vers la méthode list() du contrôleur deal.</p>
+                <p>La page deal/list.gsp est affichée.</p>
             </section>
         </section>
 
