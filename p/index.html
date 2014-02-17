@@ -92,29 +92,11 @@
             <section>
                 <h2>Modèle (<a href="http://grails.org/doc/2.2.4/guide/GORM.html#domainClasses"
                                target="_blank">Model</a>)</h2>
-                <h4>Représentation de la base de données dans le code</h4>
-				<table>
-				<tr>
-                <td>En base de données</td><td>   | </td><td>En Groovy</td>
-				</tr>
-				<tr><td><br/></td><td><br/></td></tr>
-				<tr>
-                <td>Une table</td><td><=></td><td>Une classe Groovy</td>
-				</tr>
-				<tr>
-                <td>synthaxe en snake_case</td><td><=></td><td>code en CamelCase</td>
-				<tr>
-				<td>Une colonne</td><td><=></td><td>Une variable de classe</td>
-				<tr>
-                <td>Clés étrangères</td><td><=></td><td>Mots clés<br/>
-                <ul>
-                    <li>hasMany</li>
-                    <li>hasOne</li>
-                    <li>belongsTo</li>
-                </ul>
-				</td></tr>
-				</table>
-
+                <blockquote>Représentation de la base de données dans le code</blockquote>
+                <p>Une table&nbsp;&nbsp;<=>&nbsp;&nbsp;Une classe Groovy</p>
+                <p>Syntaxe en snake_case&nbsp;&nbsp;<=>&nbsp;&nbsp;Code en CamelCase</p>
+                <p>Une colonne&nbsp;&nbsp;<=>&nbsp;&nbsp;Une variable de classe</p>
+                <p>Clés étrangères&nbsp;&nbsp;<=>&nbsp;&nbsp;Mots clés (hasMany, hasOne, belongsTo)</p>
             </section>
             <section>
                 <h2>Exemple de modèle</h2>
@@ -136,7 +118,7 @@
                 <h2>Contrôleur (<a href="http://grails.org/doc/2.2.4/guide/theWebLayer.html#controllers"
                                    target="_blank">Controller</a>)
                 </h2>
-                <h4>Gère les requêtes des utilisateurs</h4>
+                <blockquote>Gère les requêtes des utilisateurs</blockquote>
                 <p></p>
             </section>
             <section>
@@ -158,17 +140,59 @@
     }
                     </code>
                 </pre>
-                <p>Ici, si l'utilisateur accède à l'URL : <a href="monsite.com/deal/list">monsite.com/deal/list</a>, alors il va déclencher la fonction list() du contrôlleur DealController.
-                Cette fonction renvoie la liste des deals dans la variable deals pour qu'elle puisse être affichée dans la vue.
-                </p>
+                <p><a href="#">larpodeals.com/deal/list</a>, correspond à la méthode list() du contrôleur deal</p>
+                <p><code>deal/list.gsp</code> est affichée</p>
+            </section>
+            <section>
+                <h2>
+                    <a href="http://grails.org/doc/2.2.4/guide/services.html">Service</a>
+                </h2>
+                <blockquote>Responsable de la logique de l'application</blockquote>
+
+                <br/>
+                <p>Injectables dans d'autres services et contrôleurs</p>
+            </section>
+            <section>
+                <h2>Exemple de service</h2>
+                <pre>
+                    <code class="groovy" contenteditable="true">
+    class DealService {
+        // Summarize prices
+        int sum(List&lt;Deal&gt; deals) {
+            int sum = 0
+            deals.each { Deal d ->
+                sum += d.price
+            }
+            return sum
+        }
+    }
+                    </code>
+                </pre>
+            </section>
+            <section>
+                <h2>Exemple d'utilisation dans un contrôleur</h2>
+                <pre>
+                    <code class="groovy" contenteditable="true">
+    class DealController {
+        // Injection du service
+        DealService dealService
+
+        def list() {
+            List&lt;Deal&gt; deals = Deal.list()
+            // Appel de la méthode sum() du service
+            int totalPrice = dealService.sum(deals)
+            [deals: deals, totalPrice: totalPrice]
+        }
+    }
+                    </code>
+                </pre>
             </section>
         </section>
 
         <section>
             <section>
                 <h2>Vue (<a href="http://grails.org/doc/2.2.4/guide/theWebLayer.html#gsp" target="_blank">View</a>)</h2>
-                <h4>Génération de la page HTML renvoyée à l'utilisateur</h4>
-                <p></p>
+                <blockquote>Génération de la page HTML renvoyée à l'utilisateur</blockquote>
             </section>
             <section>
                 <h2>Exemple de vue</h2>
