@@ -66,8 +66,8 @@
                 <h2>Exemple</h2>
                 <pre>
                     <code class="groovy" contenteditable>
-    def world = 'World'
-    def name = "Hello, ${world} !"
+    String world = 'World'
+    String name = "Hello, ${world} !"
     println name
 
     > Hello, World!
@@ -78,9 +78,9 @@
                 <h2>Exemple 2</h2>
                 <pre>
                     <code class="groovy" contenteditable>
-    def words = ['Hello', 'Word', '!']
-    words.each {
-      print "${it} "
+    String words = ['Hello', 'Word', '!']
+    words.each { String s ->
+      print "${s} "
     }
 
     $ Hello World !
@@ -308,6 +308,108 @@
             <object class="svg" type="image/svg+xml" data="img/fonctionnement.svg">
                 <p>Votre navigateur ne supporte pas le SVG.</p>
             </object>
+        </section>
+
+        <section>
+            <section>
+                <h2>Bonnes pratiques générales</h2>
+
+                <p>Typer les variables (même si Groovy permet de ne pas le faire)</p>
+                <pre>
+                    <code class="groovy">
+    def myName = "John" // KO
+    String myName = "John" // OK
+                    </code>
+                </pre>
+            </section>
+            <section>
+                <h2>Bonnes pratiques : domaine</h2>
+
+                <p>Placer la logique du domaine dans le domaine correspondant</p>
+                <p>Définir au maximum les contraintes de la base de données dans les modèles (cf. <a href="http://grails.org/doc/latest/ref/Constraints/Usage.html" target="_blank">Constraints Usage)</a></p>
+            </section>
+            <section>
+                <h2>Bonnes pratiques : contrôleur</h2>
+
+                <p>Ne pas surcharger le contrôleur : il intercepte les requêtes, passe le traitement au service et/ou récupère les info. en base puis retourne le résultat</p>
+                <p>Si le contrôleur ne manipule qu'une seule classe du modèle utiliser &lt;Nom de la classe domaine&gt;Controller</p>
+                <pre>
+                    <code class="groovy">
+    class DealController {
+    }
+                    </code>
+                </pre>
+                <p>Ne pas coder plusieurs fois la même chose (recherche en base, etc.) utiliser les services ou les closures (cf. <a href="http://groovy.codehaus.org/Closures" target="_blank">Groovy Closure</a>)</p>
+            </section>
+            <section>
+                <h2>Bonnes pratiques : service</h2>
+
+                <p>Utile pour les algorithmes complexes</p>
+                <p>Si le service ne manipule qu'une seule classe du modèle utiliser &lt;Nom de la classe domaine&gt;Service</p>
+                <pre>
+                    <code class="groovy">
+    class DealService {
+    }
+                    </code>
+                </pre>
+                <p>Le service est transactionnel par défaut, si pas de communication avec la base : limiter l'ouverture de transaction</p>
+                <pre>
+                    <code class="groovy">
+    class DealService {
+        static transactional = false
+    }
+                    </code>
+                </pre>
+            </section>
+            <section>
+                <h2>Bonnes pratiques : vue</h2>
+
+                <p>Simple</p>
+                <p>Pas de communication avec la base de données</p>
+                <p>Pas de logique autre que celle des filtres</p>
+                <p>Utiliser au max. les composants fourni par le template Bootstrap Twitter & les filtres</p>
+                <p>Utilisez le layout parent</p>
+                <pre>
+                    <code>
+    &lt;head&gt;
+        &lt;meta name="layout" content="main"/&gt;
+        &lt;r:require modules="bootstrap"/&gt;
+    &lt;/head&gt;
+                    </code>
+                </pre>
+            </section>
+            <section>
+                <h2>Bonnes pratiques : vue 2</h2>
+
+                <p>Utiliser des templates (préfixés par <code>_</code>) pour les éléments qui se répètent (barre de navigation, footer, tableau, etc.)</p>
+                <pre>
+                    <code class="html">
+    &lt;body&gt;
+        &lt;g:include view="_nav.gsp"/&gt;
+    &lt;/body&gt;
+                    </code>
+                </pre>
+                <p>Utiliser des filtres pour appliquer une transformation</p>
+            </section>
+            <section>
+                <h2>Bonnes pratiques : filtre</h2>
+
+                <p>Simple</p>
+                <p>Le moins possible d'intéraction avec le modèle</p>
+                <p>Doit contenir plus de logique que de rendu</p>
+            </section>
+            <section>
+                <h2>Bonnes pratiques : configuration</h2>
+
+                <p>Ajouter un plugin dans <code>BuildConfig.groovy</code> au lieu de <code>application.properties</code></p>
+                <pre>
+                    <code class="groovy">
+    plugins {
+        runtime ":twitter-bootstrap:3.0.3"
+    }
+                    </code>
+                </pre>
+            </section>
         </section>
 
         <section>
