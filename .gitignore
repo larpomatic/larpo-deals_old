@@ -41,3 +41,8 @@
 
 # other
 *.iws
+.slcache/
+web-app/
+.idea/
+larpo-deals-grailsPlugins.iml
+larpo-deals.iml
