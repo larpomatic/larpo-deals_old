@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>PRCGN - Grails Framework</title>
+
+    <meta name="description" content="Build modern, sophisticated and robust Groovy web applications in record time!">
+    <meta name="author" content="Benjamin LACROIX">
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+
+    <link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <link rel="stylesheet" href="css/app.css">
+</head>
+
+<body>
+
+<div class="reveal">
+
+    <div class="slides">
+        <section>
+            <img src="img/grails-logo.png" style="padding: 20px"/>
+            <blockquote>Build modern, sophisticated and robust Groovy web applications in record time!</blockquote>
+            <p>
+                <br/>
+                <small>
+                    Benjamin / <a href="https://twitter.com/benjlacroix">@benjlacroix</a>
+                </small>
+            </p>
+        </section>
+
+        <section>
+            <h2>Framework complet MVC</h2>
+
+            <p>S'exécute sur une JVM</p>
+
+            <p>Développement rapide</p>
+
+            <p>Basé sur Groovy (dérivé de Java avec du sucre syntaxique)</p>
+
+            <p>Convention over Configuration</p>
+
+            <p>Code découpé & mutualisé</p>
+
+            <p>Test unitaires et fonctionnels</p>
+
+            <p>Communication base de données</p>
+        </section>
+
+        <section>
+            <section>
+                <img style="padding: 20px" src="img/groovy-logo.png" width="400"/>
+                <blockquote>A dynamic language for the Java platform</blockquote>
+            </section>
+            <section>
+                <h2>Exemple</h2>
+                <pre>
+                    <code class="groovy" contenteditable>
+    String world = 'World'
+    String name = "Hello, ${world} !"
+    println name
+
+    > Hello, World!
+                    </code>
+                </pre>
+            </section>
+            <section>
+                <h2>Exemple 2</h2>
+                <pre>
+                    <code class="groovy" contenteditable>
+    String words = ['Hello', 'Word', '!']
+    words.each { String s ->
+      print "${s} "
+    }
+
+    $ Hello World !
+                    </code>
+                </pre>
+            </section>
+        </section>
+
+        <section>
+            <section>
+                <h2>Modèle (<a href="http://grails.org/doc/2.2.4/guide/GORM.html#domainClasses"
+                               target="_blank">Model</a>)</h2>
+                <blockquote>Représentation de la base de données dans le code</blockquote>
+                <p>Une table&nbsp;&nbsp;<=>&nbsp;&nbsp;Une classe Groovy</p>
+                <p>Syntaxe en snake_case&nbsp;&nbsp;<=>&nbsp;&nbsp;Code en CamelCase</p>
+                <p>Une colonne&nbsp;&nbsp;<=>&nbsp;&nbsp;Une variable de classe</p>
+                <p>Clés étrangères&nbsp;&nbsp;<=>&nbsp;&nbsp;Mots clés (hasMany, hasOne, belongsTo)</p>
+            </section>
+            <section>
+                <h2>Exemple de modèle</h2>
+                <pre>
+                    <code class="groovy" contenteditable="true">
+class LarpoDeal {
+    String name
+    String description
+    String mainCaption
+	
+	static mapping = {
+		// Pour customiser le mapping entre le domain et la table en bdd
+		name column: 'MyName'
+	}
+ 
+	static constraints = {
+		// Pour gérer les contraintes sur les attributs
+		name size:5..100, nullable: false
+	}
+}</code>
+                </pre>
+                <img src="img/deal-db.png" width="200">
+            </section>
+			<section>
+			<h2>Comment Tester un Modèle</h2>
+                <pre>
+                    <code class="groovy" contenteditable="true">class GnTest extends Specification implements DomainUnitTest&lt;Gn&gt; {
+	// Methode pour initialiser la BDD
+	void setupData(){
+		Gn gn1 = new Gn(...)
+		gn1.save()
+	}
+	void "MyTest Description"() {
+		given: setupData()
+		expect:
+		// Résultat attendu
+	}
+	void "MyTest Description"() {
+		given: setupData()
+		when: 'Test'
+		// Tests 
+		then:
+		// Résultat attendu
+	}
+}</code>
+				</pre>	
+			</section>
+			<section>
+				<h2>Que faut-il tester ?</h2>
+				<ul>
+					<li>L'insertion de l'objet</li>
+					<li>La suppression de l'objet et l'impact sur ses dépendances</li>
+					<li>L'ensemble des contraintes de l'objet</li>
+					<li>L'ensemble des méthodes du domain</li>
+				</ul>
+			</section>
+        </section>
+
+        <section>
+            <section>
+                <h2>Contrôleur (<a href="http://grails.org/doc/2.2.4/guide/theWebLayer.html#controllers"
+                                   target="_blank">Controller</a>)
+                </h2>
+                <blockquote>Gère les requêtes des utilisateurs</blockquote>
+                <p></p>
+            </section>
+            <section>
+                <h2>Exemple de contrôleur</h2>
+                <pre>
+                    <code class="groovy" contenteditable="true">
+    class DealController {
+
+        def list() {
+            List&#60;Deal&#62; deals = Deal.list()
+
+            deals.each { Deal d ->
+                d.price += 1 // Add 1 to each price
+            }
+
+            [deals: deals]
+        }
+
+    }
+                    </code>
+                </pre>
+                <p><a href="#">larpodeals.com/deal/list</a>, correspond à la méthode list() du contrôleur deal</p>
+                <p><code>deal/list.gsp</code> est affichée</p>
+            </section>
+			<section>
+				<h2>Comment Tester un Contrôleur</h2>
+				<pre>
+                    <code class="groovy" contenteditable="true">class SelectIntrigueControllerSpec extends Specification 
+	implements ControllerUnitTest&lt;SelectIntrigueController&gt;, DataTest  {
+	
+    @Override
+    Class[] getDomainClassesToMock() {
+	// Liste des domains utilisés par le contrôleur
+	return [Gn, Plot, GnHasPlot]
+    }
+    // Methode pour initialiser la BDD
+    def setupData() {}
+	
+    void "Description of the Test"(){
+        given: setupData()
+        when: 
+        def res = controller.show(4)
+        then:
+        res.SelectIntrigueError == "plot.GnError"
+    }
+}</code>
+				</pre>
+			</section>
+			<section>
+				<h2>Que faut-il tester ?</h2>
+				<ul>
+					<li>Tester l'ensemble des variantes d'input (liste vide|null, entier positif|négatif, ...)</li>
+					<li>Tester l'ensemble des chemins d'exécution (if, while, for, ...)</li>
+					<li>Tester l'ensemble des variables d'output</li>
+					<li>Les Services ne sont pas mocké (pour le moment)</li>
+				</ul>
+			</section>
+		</section>
+		<section>
+            <section>
+                <h2>
+                    <a href="http://grails.org/doc/2.2.4/guide/services.html">Service</a>
+                </h2>
+                <blockquote>Responsable de la logique de l'application</blockquote>
+
+                <br/>
+                <p>Injectables dans d'autres services et contrôleurs</p>
+            </section>
+            <section>
+                <h2>Exemple de service</h2>
+                <pre>
+                    <code class="groovy" contenteditable="true">
+    class DealService {
+        // Summarize prices
+        int sum(List&lt;Deal&gt; deals) {
+            int sum = 0
+            deals.each { Deal d ->
+                sum += d.price
+            }
+            return sum
+        }
+    }
+                    </code>
+                </pre>
+            </section>
+            <section>
+                <h2>Exemple d'utilisation dans un contrôleur</h2>
+                <pre>
+                    <code class="groovy" contenteditable="true">
+    class DealController {
+        // Injection du service
+        DealService dealService
+
+        def list() {
+            List&lt;Deal&gt; deals = Deal.list()
+            // Appel de la méthode sum() du service
+            int totalPrice = dealService.sum(deals)
+            [deals: deals, totalPrice: totalPrice]
+        }
+    }
+                    </code>
+                </pre>
+            </section>
+        </section>
+
+        <section>
+            <section>
+                <h2>Vue (<a href="http://grails.org/doc/2.2.4/guide/theWebLayer.html#gsp" target="_blank">View</a>)</h2>
+                <blockquote>Génération de la page HTML renvoyée à l'utilisateur</blockquote>
+            </section>
+            <section>
+                <h2>Exemple de vue</h2>
+                <pre>
+                    <code class="html" data-trim="" contenteditable>
+    &lt;div class=&quot;container&quot;&gt;
+        &lt;table class=&quot;table table-striped&quot;&gt;
+            &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th class=&quot;uppercase&quot;&gt;caption&lt;/th&gt;
+                    &lt;th class=&quot;uppercase&quot;&gt;name&lt;/th&gt;
+                &lt;/tr&gt;
+            &lt;/thead&gt;
+        &lt;tbody&gt;
+            &lt;g:each in=&quot;${deals}&quot; var=&quot;d&quot;&gt;
+                &lt;tr&gt;
+                    &lt;td&gt;&lt;img class=&quot;col-caption&quot; src=&quot;${d.caption}&quot;/&gt;&lt;/td&gt;
+                    &lt;td&gt;${d.name}&lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/g:each&gt;
+        &lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+                    </code>
+                </pre>
+            </section>
+            <section>
+                <h2>Filtre (<a href="http://grails.org/doc/2.2.4/guide/theWebLayer.html#taglibs"
+                               target="_blank">TagLib</a>)
+                </h2>
+                <blockquote>Transformer à la volée des données dans la vue</blockquote>
+                <br/>
+            </section>
+            <section>
+                <h2>Exemple de filtre</h2>
+
+                <pre>
+                    <code class="groovy" contenteditable="true">
+    import java.text.SimpleDateFormat
+
+    class FormatTagLib {
+        def dateFormat = { attrs, body ->
+        out << new SimpleDateFormat(attrs.format).format(attrs.value)
+    }
+                    </code>
+                </pre>
+                <pre class="fragment">
+                    <code class="html" contenteditable="true">
+    &lt;g:format format="dd-mm-yyyy" value="${deal.dateCreated}"/&gt;
+                    </code>
+                </pre>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                <h2>Communication base de données</h2>
+                <blockquote>Groovy Object Relational Mapping (GORM)</blockquote>
+                <br/>
+
+                <p>Modéliser la base de données</p>
+                <p>Sauvegarder, modifier, supprimer et rechercher des objets</p>
+            </section>
+            <section>
+                <h2>Recherche</h2>
+
+                <pre>
+                    <code class="groovy" contenteditable="true">
+    // Récupérer tous les deals
+    def deals = Deal.list()
+    // Trie en fonction du nom
+    deals = Deal.list(sort:'name', order: 'asc')
+                    </code>
+                </pre>
+
+                <h3 class="fragment">Recherche dynamique</h3>
+
+                <pre class="fragment">
+                    <code class="groovy" contenteditable="true">
+    // Récupérer les deals qui s'appellent &lt;motorbike&gt;
+    def deals = Deal.findByName('motorbike')
+    // Récupère les deals qui contiennent &lt;moto&gt;
+    // et qui ont un prix supérieur à 100
+    deals = Deal.findByNameLikeAndPriceGreaterThan('moto%', 100)
+                    </code>
+                </pre>
+            </section>
+            <section>
+                <h2>Critère (Criteria)</h2>
+                <blockquote>Moyen avancé d'interroger la base de données</blockquote>
+
+                <pre>
+                    <code class="groovy" contenteditable="true">
+    def c = Deal.createCriteria()
+    def deals = c.list {
+        like('name', 'moto%')
+        and {
+            between('price', 1000, 2000)
+            like('description', 'yamaha%')
+        }
+        maxResults(10)
+        order('name', 'desc')
+    }
+                    </code>
+                </pre>
+            </section>
+        </section>
+		
+		<section>
+            <h2>Résumé des interactions</h2>
+            <object class="svg" type="image/svg+xml" data="img/fonctionnement.svg">
+                <p>Votre navigateur ne supporte pas le SVG.</p>
+            </object>
+        </section>
+
+        <section>
+            <section>
+                <h2>Bonnes pratiques générales</h2>
+
+                <p>Typer les variables (même si Groovy permet de ne pas le faire)</p>
+                <pre>
+                    <code class="groovy">
+    def myName = "John" // KO
+    String myName = "John" // OK
+                    </code>
+                </pre>
+                <p>Utiliser des constantes pour les chaines de caractères</p>
+                <pre>
+                    <code class="groovy">
+    private static final HELLO_WORLD = 'Hello, World!'
+
+    def list() {
+        print HELLO_WORLD;
+    }
+                    </code>
+                </pre>
+            </section>
+            <section>
+                <h2>Bonnes pratiques : domaine</h2>
+
+                <p>Placer la logique du domaine dans le domaine correspondant</p>
+                <p>Définir au maximum les contraintes de la base de données dans les modèles (cf. <a href="http://grails.org/doc/latest/ref/Constraints/Usage.html" target="_blank">Constraints Usage)</a></p>
+            </section>
+            <section>
+                <h2>Bonnes pratiques : contrôleur</h2>
+
+                <p>Ne pas surcharger le contrôleur : il intercepte les requêtes, passe le traitement au service et/ou récupère les info. en base puis retourne le résultat</p>
+                <p>Si le contrôleur ne manipule qu'une seule classe du modèle utiliser &lt;Nom de la classe domaine&gt;Controller</p>
+                <pre>
+                    <code class="groovy">
+    class DealController {
+    }
+                    </code>
+                </pre>
+                <p>Ne pas coder plusieurs fois la même chose (recherche en base, etc.) utiliser les services ou les closures (cf. <a href="http://groovy.codehaus.org/Closures" target="_blank">Groovy Closure</a>)</p>
+            </section>
+            <section>
+                <h2>Bonnes pratiques : service</h2>
+
+                <p>Utile pour les algorithmes complexes</p>
+                <p>Si le service ne manipule qu'une seule classe du modèle utiliser &lt;Nom de la classe domaine&gt;Service</p>
+                <pre>
+                    <code class="groovy">
+    class DealService {
+    }
+                    </code>
+                </pre>
+                <p>Le service est transactionnel par défaut, si pas de communication avec la base : limiter l'ouverture de transaction</p>
+                <pre>
+                    <code class="groovy">
+    class DealService {
+        static transactional = false
+    }
+                    </code>
+                </pre>
+            </section>
+            <section>
+                <h2>Bonnes pratiques : vue</h2>
+
+                <p>Simple</p>
+                <p>Pas de communication avec la base de données</p>
+                <p>Pas de logique autre que celle des filtres</p>
+                <p>Utiliser au max. les composants fourni par le template Bootstrap Twitter & les filtres</p>
+                <p>Utilisez le layout parent</p>
+                <pre>
+                    <code>
+    &lt;head&gt;
+        &lt;meta name="layout" content="main"/&gt;
+        &lt;r:require modules="bootstrap"/&gt;
+    &lt;/head&gt;
+                    </code>
+                </pre>
+            </section>
+            <section>
+                <h2>Bonnes pratiques : vue 2</h2>
+
+                <p>Utiliser des templates (préfixés par <code>_</code>) pour les éléments qui se répètent (barre de navigation, footer, tableau, etc.)</p>
+                <pre>
+                    <code class="html">
+    &lt;body&gt;
+        &lt;g:include view="_nav.gsp"/&gt;
+    &lt;/body&gt;
+                    </code>
+                </pre>
+                <p>Utiliser des filtres pour appliquer une transformation</p>
+            </section>
+            <section>
+                <h2>Bonnes pratiques : filtre</h2>
+
+                <p>Simple</p>
+                <p>Le moins possible d'intéraction avec le modèle</p>
+                <p>Doit contenir plus de logique que de rendu</p>
+            </section>
+            <section>
+                <h2>Bonnes pratiques : configuration</h2>
+
+                <p>Ajouter un plugin dans <code>BuildConfig.groovy</code> au lieu de <code>application.properties</code></p>
+                <pre>
+                    <code class="groovy">
+    plugins {
+        runtime ":twitter-bootstrap:3.0.3"
+    }
+                    </code>
+                </pre>
+            </section>
+        </section>
+
+        <section>
+            <h2>Commandes utiles</h2>
+
+            <pre>
+                <code contenteditable="true" class="groovy">
+    // Lance le serveur d'application
+    $ grails run-app
+    // Met à jour la structure du projet
+    $ grails upgrade
+    // Nettoyage du projet
+    $ grails clean
+                </code>
+            </pre>
+        </section>
+
+        <section>
+            <h2>Ressource</h2>
+
+            <p>
+                <a href="http://grails.org/doc/2.2.4/" target="_blank">Documentation Grails (2.2.4)</a>
+            </p>
+        </section>
+
+        <section>
+            <h2>Question ?</h2>
+        </section>
+    </div>
+
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.min.js"></script>
+
+<script>
+
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        slideNumber: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Parallax scrolling
+        // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+        // parallaxBackgroundSize: '2100px 900px',
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: 'lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            } },
+            { src: 'plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: 'plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            } },
+            { src: 'plugin/zoom-js/zoom.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } },
+            { src: 'plugin/notes/notes.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } }
+        ]
+    });
+
+</script>
+
+</body>
+</html>
