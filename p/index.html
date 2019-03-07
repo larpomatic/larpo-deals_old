@@ -146,11 +146,13 @@ class LarpoDeal {
 				</pre>	
 			</section>
 			<section>
-				<h2>QUE FAUT-IL TESTER ?</h2>
-				<p>L'insertion de l'objet</p>
-				<p>La suppression de l'objet et l'impact sur ses dépendances</p>
-				<p>L'ensemble des contraintes de l'objet</p>
-				<p>L'ensemble des méthodes du domain</p>
+				<h2>Que faut-il tester ?</h2>
+				<ul>
+					<li>L'insertion de l'objet</li>
+					<li>La suppression de l'objet et l'impact sur ses dépendances</li>
+					<li>L'ensemble des contraintes de l'objet</li>
+					<li>L'ensemble des méthodes du domain</li>
+				</ul>
 			</section>
         </section>
 
@@ -184,6 +186,41 @@ class LarpoDeal {
                 <p><a href="#">larpodeals.com/deal/list</a>, correspond à la méthode list() du contrôleur deal</p>
                 <p><code>deal/list.gsp</code> est affichée</p>
             </section>
+			<section>
+				<h2>Comment Tester un Contrôleur</h2>
+				<pre>
+                    <code class="groovy" contenteditable="true">class SelectIntrigueControllerSpec extends Specification 
+	implements ControllerUnitTest&lt;SelectIntrigueController&gt;, DataTest  {
+	
+    @Override
+    Class[] getDomainClassesToMock() {
+	// Liste des domains utilisés par le contrôleur
+	return [Gn, Plot, GnHasPlot]
+    }
+    // Methode pour initialiser la BDD
+    def setupData() {}
+	
+    void "Description of the Test"(){
+        given: setupData()
+        when: 
+        def res = controller.show(4)
+        then:
+        res.SelectIntrigueError == "plot.GnError"
+    }
+}</code>
+				</pre>
+			</section>
+			<section>
+				<h2>Que faut-il tester ?</h2>
+				<ul>
+					<li>Tester l'ensemble des variantes d'input (liste vide|null, entier positif|négatif, ...)</li>
+					<li>Tester l'ensemble des chemins d'exécution (if, while, for, ...)</li>
+					<li>Tester l'ensemble des variables d'output</li>
+					<li>Les Services ne sont pas mocké (pour le moment)</li>
+				</ul>
+			</section>
+		</section>
+		<section>
             <section>
                 <h2>
                     <a href="http://grails.org/doc/2.2.4/guide/services.html">Service</a>
