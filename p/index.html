@@ -103,15 +103,55 @@
                 <h2>Exemple de modèle</h2>
                 <pre>
                     <code class="groovy" contenteditable="true">
-    class LarpoDeal {
-        String name
-        String description
-        String mainCaption
-    }
-                    </code>
+class LarpoDeal {
+    String name
+    String description
+    String mainCaption
+	
+	static mapping = {
+		// Pour customiser le mapping entre le domain et la table en bdd
+		name column: 'MyName'
+	}
+ 
+	static constraints = {
+		// Pour gérer les contraintes sur les attributs
+		name size:5..100, nullable: false
+	}
+}</code>
                 </pre>
                 <img src="img/deal-db.png" width="200">
             </section>
+			<section>
+			<h2>Comment Tester un Modèle</h2>
+                <pre>
+                    <code class="groovy" contenteditable="true">class GnTest extends Specification implements DomainUnitTest&lt;Gn&gt; {
+	// Methode pour initialiser la BDD
+	void setupData(){
+		Gn gn1 = new Gn(...)
+		gn1.save()
+	}
+	void "MyTest Description"() {
+		given: setupData()
+		expect:
+		// Résultat attendu
+	}
+	void "MyTest Description"() {
+		given: setupData()
+		when: 'Test'
+		// Tests 
+		then:
+		// Résultat attendu
+	}
+}</code>
+				</pre>	
+			</section>
+			<section>
+				<h2>QUE FAUT-IL TESTER ?</h2>
+				<p>L'insertion de l'objet</p>
+				<p>La suppression de l'objet et l'impact sur ses dépendances</p>
+				<p>L'ensemble des contraintes de l'objet</p>
+				<p>L'ensemble des méthodes du domain</p>
+			</section>
         </section>
 
         <section>
