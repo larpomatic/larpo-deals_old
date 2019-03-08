@@ -265,6 +265,59 @@ class LarpoDeal {
                     </code>
                 </pre>
             </section>
+			<section>
+				<h2>Comment Tester un Service</h2>
+				<pre>
+                    <code class="groovy" contenteditable="true">class TagServiceSpec extends Specification
+		    implements ServiceUnitTest&lt;TagService&gt;, DataTest {
+    @Override
+    Class[] getDomainClassesToMock() {
+	// Liste des domains utilisés par le contrôleur
+	return [Gn, Plot, GnHasPlot]
+    }
+	// Methode pour initialiser la BDD
+    def setupData() {}
+	void "Description du Test"() {
+        when:
+            service.computeCompatibilityScore(null, null)
+        then:"Resultat == null"
+          thrown InvalidParameterException
+    }
+	</code>
+				</pre>
+			</section>
+			<section>
+				<h2>Que faut-il tester ?</h2>
+				<p>Lorsque vous développez un Service, vous ne pouvez pas totalement anticiper son utilisation.</p>
+				<p>Il est donc indispensable d'avoir une <b>couverture de test totale</b> sur ces derniers !</p>
+				<ul>
+					<li>Tester l'ensemble des variantes d'input (liste vide|null, entier positif|négatif, ...)</li>
+					<li>Tester l'ensemble des chemins d'exécution (if, while, for, ...)</li>
+					<li>Tester l'ensemble des variables d'output</li>
+					<li>Tester les méthodes exposées (public) mais aussi internes (private)</li>
+				</ul>
+			</section>
+			<section>
+				<h2>Comment tester une méthode private d'un Service</h2>
+				<pre>
+					<code class="java" contenteditable="true">//Returns a Method object that reflects the specified declared method of the class
+//or interface represented by this Class object.
+public Method getDeclaredMethod(String name, Class&lt;?&gt;... parameterTypes)
+   throws NoSuchMethodException, SecurityException
+//Set the accessible flag for this object to the indicated boolean value.
+public void setAccessible(boolean flag)
+                   throws SecurityException</code>
+				</pre><pre>
+                    <code class="groovy" contenteditable="true">void "Description du Test"() {
+    when:
+    Method method = TagService.getDeclaredMethod("weightCompute", Integer, Integer)
+    method.setAccessible(true)
+    Integer res = method.invoke(service, 50, 50, 1)
+    then:
+    res == 0
+}</code>
+				</pre>
+			</section>
         </section>
 
         <section>
