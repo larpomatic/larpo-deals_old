@@ -275,7 +275,7 @@ class LarpoDeal {
 	// Liste des domains utilisés par le contrôleur
 	return [Gn, Plot, GnHasPlot]
     }
-	// Methode pour initialiser la BDD
+    // Methode pour initialiser la BDD
     def setupData() {}
 	void "Description du Test"() {
         when:
@@ -350,6 +350,121 @@ public void setAccessible(boolean flag)
                     </code>
                 </pre>
             </section>
+			<section>
+				<h2>Comment Tester une Vue avec <a href="http://www.gebish.org/">Geb</a></h2>
+				<h5>Définition de la Page</h5>
+				<p>Pour chaque vue, il est nécessaire de créer une class Geb Page</p>
+				<p>Cette dernière devra définir l'ensemble des éléments de la page en utilisant le langage JQuery</p>
+				<pre>
+					<code class="java" contenteditable="true">class HomePage extends Page {
+// URL de la view
+    static url = "/"
+// Liste des éléments de la vue
+    static content = {
+        welcomeTitle { $(By.className("title-gnk-h1")) }
+        howTo { $(By.className("how-to")) }
+        title2 { $(By.className("title-gnk-h2")) }
+        homeBlock { $(By.id("homeBlock")) }
+    }
+}</code>
+				</pre>
+			</section>
+			<section>
+				<h2>Comment Tester une Vue avec <a href="http://www.gebish.org/">Geb</a></h2>
+				<h5>Définition du Module</h5>
+				<p>Pour des éléments HTML complexes ou utilisés dans plusieurs vues, il est possible de créer un Module</p>
+				<pre>
+					<code class="groovy" contenteditable="true">class NavBarModule extends Module{
+    static content = {
+        logo { $(By.className("navbar-brand")) }
+        linkReferential { $(By.className("nav-item"), 0) }
+        linkPlots { $(By.className("nav-item"), 1) }
+        linkGn { $(By.className("nav-item"), 2) }
+        linkConfiguration { $(By.className("nav-item"), 3) }
+        linkLogOut { $(By.className("nav-link"), 4) }
+    }
+}
+
+class HomePage extends Page {
+// Liste des éléments de la vue
+    static content = {
+        navBar { $("nav").module(NavBarModule) }
+        footer { $("footer").module(FooterModule) }
+    }
+}</code>
+				</pre>
+			</section>
+			<section>
+				<h2>Comment Tester une Vue avec <a href="http://www.gebish.org/">Geb</a></h2>
+				<h5>Ecriture du test</h5>
+				<pre>
+					<code class="groovy" contenteditable="true">class HomeSpec extends GebSpec {
+    MessageSource messageSource
+
+    void "Test NavBar" () {
+        when:"The home page is visited"
+        to HomePage
+        then:"The logo is correct"
+        // Utilisation de la norma i18n
+        navBar.logo.text() == messageSource.getMessage('navbar.genotron', null, new Locale('en'))
+    }
+}</code>
+				</pre>
+			</section>
+			<section>
+				<h2>Comment Tester une Vue avec <a href="http://www.gebish.org/">Geb</a></h2>
+				<h5>Simulation du click</h5>
+				<pre>
+					<code class="groovy" contenteditable="true">class HomeSpec extends GebSpec {
+    void "Test NavBar" () {
+        when:"Clicking on logo"
+        navBar.logo.click()
+        then:
+        page instanceof HomePage
+        
+        when: "Clicking on Blog"
+        footer.blog.click()
+        then: "I'm redirected to blog"
+        currentUrl == "http://larpomatic.net/"
+    }
+}</code>
+				</pre>
+			</section>
+			<section>
+				<h2>Comment Tester une Vue avec <a href="http://www.gebish.org/">Geb</a></h2>
+				<h5>Simulation d'un formulaire</h5>
+				<pre>
+					<code class="java" contenteditable="true">class LoginPage extends Page {
+    static content = {
+        usernameField() {...}
+        passwordField() {...}
+        loginButton() {...}
+    }
+    def enterLoginPassword(login, password){
+        usernameField.value(login)
+        passwordField.value(password)
+    }
+}
+class LoginLogoutSpec extends GebReportingSpec {
+    def "Login with valid username and password"() {
+        when: "Enter valid Login & Password"
+            loginPage.enterLoginPassword("username", "password")
+            loginPage.loginButton.click()
+        then: [...]
+    }
+}</code>
+				</pre>
+			</section>
+			<section>
+				<h2>Que faut-il tester ?</h2>
+				<ul>
+					<li>Tester l'ensemble des variantes d'input (liste vide|null, entier positif|négatif, ...) venant du contrôleur</li>
+					<li>Tester la bonne exécution du code grails</li>
+					<li>Tester la bonne exécution du code javascript, jquery & ajax</li>
+					<li>Tester de manière globale le bon chargement de la vue</li>
+					<li>Simuler les actions utilisateur</li>
+				</ul>
+			</section>
             <section>
                 <h2>Filtre (<a href="http://grails.org/doc/2.2.4/guide/theWebLayer.html#taglibs"
                                target="_blank">TagLib</a>)
@@ -559,6 +674,8 @@ public void setAccessible(boolean flag)
                 <code contenteditable="true" class="groovy">
     // Lance le serveur d'application
     $ grails run-app
+	// Lance les tests
+    $ grails test-app
     // Met à jour la structure du projet
     $ grails upgrade
     // Nettoyage du projet
